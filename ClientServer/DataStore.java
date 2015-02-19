@@ -1,9 +1,6 @@
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -11,234 +8,118 @@ import javax.swing.table.DefaultTableModel;
 
 public class DataStore {
 
-	private ArrayList<Game> m_games = new ArrayList<Game> ();
-	private ArrayList<String> m_restoredGames = new ArrayList<String> ();
+	private ArrayList<Project> m_projects;
+	private static JTable m_table;
+	private static DefaultTableModel m_model;
 	private static DataStore m_dataStore = new DataStore();
+	private static final String[] m_header = {"Project Name", "Number of Issues"};
 	private static final String m_IPAddress = "http://localhost:8080/";
-	private static String m_CreatorID = "Taylor";
-	private static Player m_CurrentUser;
 	private static int m_port;
-	private GameListTable m_GameListTable;
 	
 	public static DataStore getDataStore() {
 		return m_dataStore;
-	}
-	
-	public void setGameListTable(GameListTable gameListTable) {
-		m_GameListTable = gameListTable;
-	}
-	
-	public void setCreatorID(String creatorID) {
-		m_CreatorID = creatorID;
-	}
-	
-	public void setCurrentUser(Player CurrentUser) {
-		m_CurrentUser = CurrentUser;
 	}
 	
 	public void setPort(int port) {
 		m_port = port;
 	}
 	
-	public String getCreatorID() {
-		return m_CreatorID;
+	public void setTable(JTable table) {
+		m_table = table;
 	}
 	
-	public Player getCurrentUser() {
-		return m_CurrentUser;
+	public void setModel(DefaultTableModel model) {
+		m_model = model;
 	}
 	
-	public Game getGame(int pos) {
-		return m_games.get(pos);
+	public JTable getTable() {
+		return m_table;
 	}
 	
-	public ArrayList<Game> getGameList() {
-		return m_games;
+	public DefaultTableModel getModel() {
+		return m_model;
 	}
 	
-	public int getGameListLength() {
-		return m_games.size();
+	public Project getProject(int pos) {
+		return m_projects.get(pos);
 	}
 	
-	public void addGame(Game game) {
-		m_games.add(game);
-		m_GameListTable.addGame(game);
+	public int getProjectListLength() {
+		return m_projects.size();
 	}
 	
-	public void restoreGame(String fileName) {
-		for(int i = 0; i < m_restoredGames.size(); i++) {
-			if(m_restoredGames.get(i).equals(fileName)) {
-				JOptionPane.showMessageDialog(null, "This game is already in progress.");
-				return;
+	public String[] getProjectTableHeader() {
+		return m_header;
+	}
+	
+	public String[][] getProjectTableData() {
+		String[][] data = new String[m_projects.size()][3];
+		Project temp;
+			for(int i = 0; i < m_projects.size(); i++) {
+				temp = m_projects.get(i);
+				data[i][0] = temp.getTitle();
+				data[i][1] = Integer.toString(temp.getNumberOfIssues());
+			}
+		return data;
+	}
+	
+	public void addProject(Project project) {
+		m_projects.add(project);
+		m_model.addRow(new String[] {
+				project.getTitle(),
+				Integer.toString(project.getNumberOfIssues()),
+		});
+	}
+	
+	public void editProject(Project project, int pos) {
+		m_projects.remove(pos);
+		m_projects.add(pos, project);
+		m_model.setValueAt(project.getTitle(), pos, 0);
+		m_model.setValueAt(Integer.toString(project.getNumberOfIssues()), pos, 1);
+	}
+	
+	public void removeProject() {
+		int row = m_table.getSelectedRow();
+		if(0 <= row && row < m_projects.size()) {
+			int result = JOptionPane.showOptionDialog(null,
+					"Are you sure you want to delete " + m_projects.get(row).getTitle() + "?",
+					"Delete Project", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null,
+					new String[] {"No", "Yes" }, null);
+			if(result == 1) {
+				m_model.removeRow(row);
+				m_projects.remove(row);
 			}
 		}
-		Game trek = new Game();
-			trek.setName("Star Trek Forever");
-			trek.setStardate(2236);
-				Empire Federation = new Empire();
-				Federation.setId("1000");
-				Federation.setName("FEDERATION");
-				Federation.setMission("EXPLORATION");
-			WeaponSpec engWep = new WeaponSpec();
-				engWep.setId("1");
-				engWep.setYield(10);
-				engWep.setName("Laser");
-				engWep.setType("ENGERY");
-			WeaponSpec misWep = new WeaponSpec();
-				misWep.setId("2");
-				misWep.setYield(30);
-				misWep.setName("Torpedo");
-				misWep.setType("MISSILE");
-			ShipSpec shipspecs = new ShipSpec();
-				shipspecs.setId("1000");
-				shipspecs.setShipClass("STARSHIP");
-				shipspecs.setEmp(Federation);
-				shipspecs.setName("Taylor's Ship");
-				shipspecs.setEnergyWep(engWep);
-				shipspecs.setMaxEnergy(1200);
-				shipspecs.setMaxMissile(100);
-				shipspecs.setMaxShields(1000);
-				shipspecs.setMaxSpeed(10000);
-				shipspecs.setMissileWep(misWep);
-			Ship ship = new Ship();
-				ship.setsX(1);
-				ship.setsY(1);
-				ship.setpX(2);
-				ship.setpY(2);
-				ship.setCurrShields(800);
-				ship.setCurrEnergy(500);
-				ship.setAlert("GREEN");
-				ship.setCurrMissiles(50);
-				ship.setSpecs(shipspecs);
-			Player player = new Player();
-				player.setName("Taylor");
-				player.setEmp(Federation);
-				player.setS(ship);
-		setCurrentUser(player);
-		trek.addPlayer(player);
-				Federation = new Empire();
-				Federation.setId("1000");
-				Federation.setName("FEDERATION");
-				Federation.setMission("EXPLORATION");
-			engWep = new WeaponSpec();
-				engWep.setId("1");
-				engWep.setYield(10);
-				engWep.setName("Laser");
-				engWep.setType("ENGERY");
-			misWep = new WeaponSpec();
-				misWep.setId("2");
-				misWep.setYield(30);
-				misWep.setName("Torpedo");
-				misWep.setType("MISSILE");
-			shipspecs = new ShipSpec();
-				shipspecs.setId("1000");
-				shipspecs.setShipClass("STARSHIP");
-				shipspecs.setEmp(Federation);
-				shipspecs.setName("Nick's Ship");
-				shipspecs.setEnergyWep(engWep);
-				shipspecs.setMaxEnergy(1200);
-				shipspecs.setMaxMissile(100);
-				shipspecs.setMaxShields(1000);
-				shipspecs.setMaxSpeed(10000);
-				shipspecs.setMissileWep(misWep);
-			ship = new Ship();
-				ship.setsX(1);
-				ship.setsY(1);
-				ship.setpX(2);
-				ship.setpY(2);
-				ship.setCurrShields(800);
-				ship.setCurrEnergy(500);
-				ship.setAlert("GREEN");
-				ship.setCurrMissiles(50);
-				ship.setSpecs(shipspecs);
-			player = new Player();
-				player.setName("Nick");
-				player.setEmp(Federation);
-				player.setS(ship);
-		trek.addPlayer(player);
-				Federation = new Empire();
-				Federation.setId("1000");
-				Federation.setName("FEDERATION");
-				Federation.setMission("EXPLORATION");
-			engWep = new WeaponSpec();
-				engWep.setId("1");
-				engWep.setYield(10);
-				engWep.setName("Laser");
-				engWep.setType("ENGERY");
-			misWep = new WeaponSpec();
-				misWep.setId("2");
-				misWep.setYield(30);
-				misWep.setName("Torpedo");
-				misWep.setType("MISSILE");
-			shipspecs = new ShipSpec();
-				shipspecs.setId("1000");
-				shipspecs.setShipClass("STARSHIP");
-				shipspecs.setEmp(Federation);
-				shipspecs.setName("Conner's Ship");
-				shipspecs.setEnergyWep(engWep);
-				shipspecs.setMaxEnergy(1200);
-				shipspecs.setMaxMissile(100);
-				shipspecs.setMaxShields(1000);
-				shipspecs.setMaxSpeed(10000);
-				shipspecs.setMissileWep(misWep);
-			ship = new Ship();
-				ship.setsX(1);
-				ship.setsY(1);
-				ship.setpX(2);
-				ship.setpY(2);
-				ship.setCurrShields(800);
-				ship.setCurrEnergy(500);
-				ship.setAlert("GREEN");
-				ship.setCurrMissiles(50);
-				ship.setSpecs(shipspecs);
-			player = new Player();
-				player.setName("Conner");
-				player.setEmp(Federation);
-				player.setS(ship);
-		trek.addPlayer(player);
-				Federation = new Empire();
-				Federation.setId("1000");
-				Federation.setName("FEDERATION");
-				Federation.setMission("EXPLORATION");
-			engWep = new WeaponSpec();
-				engWep.setId("1");
-				engWep.setYield(10);
-				engWep.setName("Laser");
-				engWep.setType("ENGERY");
-			misWep = new WeaponSpec();
-				misWep.setId("2");
-				misWep.setYield(30);
-				misWep.setName("Torpedo");
-				misWep.setType("MISSILE");
-			shipspecs = new ShipSpec();
-				shipspecs.setId("1000");
-				shipspecs.setShipClass("STARSHIP");
-				shipspecs.setEmp(Federation);
-				shipspecs.setName("Rayne's Ship");
-				shipspecs.setEnergyWep(engWep);
-				shipspecs.setMaxEnergy(1200);
-				shipspecs.setMaxMissile(100);
-				shipspecs.setMaxShields(1000);
-				shipspecs.setMaxSpeed(10000);
-				shipspecs.setMissileWep(misWep);
-			ship = new Ship();
-				ship.setsX(1);
-				ship.setsY(1);
-				ship.setpX(2);
-				ship.setpY(2);
-				ship.setCurrShields(800);
-				ship.setCurrEnergy(500);
-				ship.setAlert("GREEN");
-				ship.setCurrMissiles(50);
-				ship.setSpecs(shipspecs);
-			player = new Player();
-				player.setName("Rayne");
-				player.setEmp(Federation);
-				player.setS(ship);
-		trek.addPlayer(player);
+	}
+	
+	public void serverProjectListRequest() {
+		System.out.println("********** PROJECT LIST REQUEST **********");
+		m_projects = new ArrayList<Project> ();
+		ListProjectRequest LPRequest = new ListProjectRequest();
+		String jsonRequest = new Gson().toJson(LPRequest);
+		String url = m_IPAddress + LPRequest.getClass().getSimpleName();
+		System.out.println("Sending Project List Request: " + LPRequest.getClass().getSimpleName());
+		HttpRequest httpReq = HttpRequest.post(url).send(jsonRequest);
 		
-		m_games.add(trek);
-		m_GameListTable.addGame(trek);
-		m_restoredGames.add(fileName);
+		int status = httpReq.code();
+		String jsonResponse = httpReq.body();
+		ListProjectResponse LPResponse = new Gson().fromJson(jsonResponse, ListProjectResponse.class);
+			for(int i = 0; i < LPResponse.projects.size(); i++) {
+				m_projects.add(LPResponse.projects.get(i));
+			}	
+		System.out.println("Recieved Project List: " + status);
+		System.out.println("********** PROJECT LIST REQUEST **********");
+	}
+	
+	public void serverIssueUpdate(ProjectRequest issue) {
+		System.out.println();
+		System.out.println("********* ISSUE REQUEST **********");
+		String jsonRequest = new Gson().toJson(issue);
+		String url = m_IPAddress + issue.getClass().getSimpleName();
+		System.out.println("Sending Issue Request: " + issue.getClass().getSimpleName());
+		HttpRequest httpReq = HttpRequest.post(url).send(jsonRequest);
+		int status = httpReq.code();
+		System.out.println("********** ISSUE REQUEST **********");
 	}
 }

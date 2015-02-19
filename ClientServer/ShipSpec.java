@@ -2,12 +2,9 @@
 public class ShipSpec {
 	private String id;
 	private String name;
-	private String m_Class;
 	private Empire emp;
 	private int maxEnergy;
 	private int maxShields;
-	private int maxSpeed;
-	private int maxMissile;
 	private WeaponSpec energyWep;
 	private WeaponSpec missileWep;
 	
@@ -25,14 +22,6 @@ public class ShipSpec {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getShipClass() {
-		return m_Class;
-	}
-
-	public void setShipClass(String m_class) {
-		m_Class = m_class;
 	}
 
 	public Empire getEmp() {
@@ -59,22 +48,6 @@ public class ShipSpec {
 		this.maxShields = maxShields;
 	}
 
-	public int getMaxSpeed() {
-		return maxSpeed;
-	}
-
-	public void setMaxSpeed(int speed) {
-		maxSpeed = speed;
-	}
-
-	public int getMaxMissile() {
-		return maxMissile;
-	}
-
-	public void setMaxMissile(int missile) {
-		maxMissile = missile;
-	}
-
 	public WeaponSpec getEnergyWep() {
 		return energyWep;
 	}
@@ -89,6 +62,11 @@ public class ShipSpec {
 
 	public void setMissileWep(WeaponSpec missileWep) {
 		this.missileWep = missileWep;
+	}
+
+	public static Object init(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -66,10 +66,6 @@ public class Ship {
 		this.currMissiles = currMissiles;
 	}
 
-	public void decrementMissileLevel() {
-		currMissiles--;
-	}
-
 	public int getCurrShields() {
 		return currShields;
 	}
@@ -84,6 +80,11 @@ public class Ship {
 
 	public void setAlert(String alert) {
 		this.alert = alert;
+	}
+
+	public static Object init(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

@@ -36,8 +36,47 @@ public class ProjectDatabase {
   public void restoreGameRequest(String game){
 	Game tmp = new Game();
 	String[] gameLines = game.split("\n");
-	 for (int x=0; x<gameLines.length; x++)
-         System.out.println(gameLines[x]);
+	int i = 1;
+	
+	tmp.init(gameLines[i]);
+	
+	i = i + 3;
+	
+	while(gameLines[i] != "\n"){
+		tmp.addEmpires(Empire.init(gameLines[i]));
+	}
+	
+	i = i + 2;
+	
+	while(gameLines[i] != "\n"){
+		tmp.addWeapons(WeaponSpec.init(gameLines[i]));
+	}
+	
+	i = i + 2;
+	
+	while(gameLines[i] != "\n"){
+		tmp.addShipTypes(ShipSpec.init(gameLines[i]));
+	}
+	
+	i = i + 2;
+	
+	while(gameLines[i] != "\n"){
+		tmp.addBases(Base.init(gameLines[i]));
+	}
+	
+	i = i + 2;
+	
+	while(gameLines[i] != "\n"){
+		tmp.addShips(Ship.init(gameLines[i]));
+	}
+	
+	i = i + 2;
+	
+	while(gameLines[i] != "\n"){
+		tmp.addPlayers(Player.init(gameLines[i]));
+	}
+	
+	games.add(tmp);
 	
   }
   
