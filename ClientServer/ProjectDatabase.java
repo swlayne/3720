@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class ProjectDatabase {
 
   private static ProjectDatabase instance = new ProjectDatabase();
-  private ArrayList<Game> projects;
+  private ArrayList<Game> games;
   
   private ProjectDatabase(){}
   
@@ -12,7 +12,7 @@ public class ProjectDatabase {
   }
   
   public ArrayList<Game> getAll() {
-	    return projects;
+	    return games;
 	  }
   
  /* public void addIssueRequest(int projectNum, String[] issue){
@@ -32,4 +32,13 @@ public class ProjectDatabase {
 	     }
   }
   */
+  
+  public void restoreGameRequest(String game){
+	Game tmp = new Game();
+	String[] gameLines = game.split("\n");
+	 for (int x=0; x<gameLines.length; x++)
+         System.out.println(gameLines[x]);
+	
+  }
+  
 }
