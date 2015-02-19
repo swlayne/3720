@@ -66,6 +66,10 @@ public class Ship {
 		this.currMissiles = currMissiles;
 	}
 
+	public void decrementMissileLevel() {
+		currMissiles--;
+	}
+
 	public int getCurrShields() {
 		return currShields;
 	}
