@@ -22,33 +22,18 @@ import javax.swing.KeyStroke;
 
 public class MainFrame extends JFrame implements ActionListener {
 
-	private SystemInformationDlg aboutDlg = new SystemInformationDlg();
+	private SystemInformationDlg m_AboutDlg = new SystemInformationDlg();
+	private GameEditingDlg m_GameDlg = new GameEditingDlg();
 	private static DataStore m_ds = DataStore.getDataStore();
 	
 	public MainFrame(String caption) {
 		super(caption);
 	}
 	
-	public void initServerConnection() {
-		JTextField PortNumber = new JTextField();
-
-		JPanel myPanel = new JPanel();
-			myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-			myPanel.add(new JLabel("Port Number"));
-			myPanel.add(PortNumber);
-		
-		int result = JOptionPane.showOptionDialog(null, myPanel,
-				"Enter Port Number for LocalHost",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-				new String[] {"Cancel", "Connect"}, null);
-		if(result == 1) {
-			m_ds.setPort(Integer.parseInt(PortNumber.getText()));
-			m_ds.serverProjectListRequest();
-		}
-	}
-	
-	public void initFrame() {
-		ProjectTable projTable = new ProjectTable();
+	public void initFrame() {	
+		GameListTable gameTable = new GameListTable();
+			gameTable.setModel(m_ds.getGameList());
+			m_ds.setGameListTable(gameTable);
 		
 		this.setSize(800, 300);
 		ImageIcon img = new ImageIcon("tiger.jpg");
@@ -56,10 +41,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BorderLayout());
 		
-		JScrollPane jsp = new JScrollPane(projTable.getTable());
+		JScrollPane jsp = new JScrollPane(gameTable.getTable());
 			jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-			jsp.setColumnHeaderView(projTable.getTable().getTableHeader());
+			jsp.setColumnHeaderView(gameTable.getTable().getTableHeader());
 			jsp.setSize(new Dimension(790, 280));
 		this.getContentPane().add(jsp);
 			
@@ -99,16 +84,29 @@ public class MainFrame extends JFrame implements ActionListener {
 				menu.add(menuItem);
 		this.setJMenuBar(menuBar);
 		
+		JPanel panel = new JPanel();
+			JButton button = new JButton("Restore");
+				button.addActionListener(this);
+			panel.add(button);
+				button = new JButton("Save");
+				button.addActionListener(this);
+			panel.add(button);
+		this.add(panel, BorderLayout.SOUTH);
 		this.setVisible(true);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if(event.getActionCommand() == "About")
-			aboutDlg.about();
+			m_AboutDlg.about();
 		else if (event.getActionCommand() == "Shortcuts")
-			aboutDlg.shortcuts();
-		else if(event.getActionCommand() == "Exit")
+			m_AboutDlg.shortcuts();
+		else if(event.getActionCommand() == "Restore")
+			m_GameDlg.restoreGame();
+/*		else if(event.getActionCommand() == "Save")
+			m_GameDlg.saveGame();
+*/		else if(event.getActionCommand() == "Exit")
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 }
+
