@@ -1,10 +1,11 @@
-
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,18 +18,34 @@ public class AuthenticationDialog extends JDialog {
 
 	private static final long serialVersionUID = 1738509094567553993L;
 	
-	public void login(JDialog owner, String serverip, String port, String user, char[] pass) {
+	private static final String IPADDRESS_PATTERN = 
+		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+
+	
+	public boolean validateIPAddress( String ipAddress ){ 
+		Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+		Matcher matcher = pattern.matcher(ipAddress);
+		  return matcher.matches();
+		
+	}
+	
+	public void login(JDialog owner, String serverip, Integer port, String user, char[] pass) {
 		String correctPass = "p";
 		char[] correct = correctPass.toCharArray();
-		if(Arrays.equals(pass,correct)) {
-			owner.dispose();
-			//ADD JOIN GAME HERE
+		if(serverip != null && validateIPAddress(serverip) && port != null && 0 < port && port < 65536) {
+			if(Arrays.equals(pass,correct)) {
+				owner.dispose();
+				//ADD JOIN GAME HERE
+			}
+			else {
+				JOptionPane.showMessageDialog(this,"USERNAME OR PASSWORD INCORRECT","AUTHENTICATION ERROR",JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else {
-			JOptionPane.showMessageDialog(this,
-				    "USERNAME OR PASSWORD INCORRECT",
-				    "AUTHENTICATION ERROR",
-				    JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this,"INVALID IP ADDRESS OR PORT NUMBER","AUTHENTICATION ERROR",JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -72,7 +89,12 @@ public class AuthenticationDialog extends JDialog {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				char[] thepassword = passwordField.getPassword();
-				login(parent, serverField.getText(), portField.getText(), usernameField.getText(), thepassword);
+				if(serverField.getText().equals("") || portField.getText().equals("") || usernameField.getText().equals("")) {
+					JOptionPane.showMessageDialog(parent,"ALL FIELDS ARE REQUIRED!","MISSING INFORMATION",JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					login(parent, serverField.getText(), Integer.parseInt(portField.getText()), usernameField.getText(), thepassword);
+				}
 			}
 		});
 		add(loginButton, gbc);
@@ -81,3 +103,4 @@ public class AuthenticationDialog extends JDialog {
 	}
 	
 }
+
