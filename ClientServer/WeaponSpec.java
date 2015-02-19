@@ -36,5 +36,10 @@ public class WeaponSpec {
 	public void setYield(int yield) {
 		this.yield = yield;
 	}
+
+	public static Object init(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

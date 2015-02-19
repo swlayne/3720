@@ -27,5 +27,10 @@ public class Empire {
 	public void setMission(String mission) {
 		this.mission = mission;
 	}
+
+	public static Object init(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

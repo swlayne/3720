@@ -27,6 +27,11 @@ public class Player {
 	public void setEmp(Empire emp) {
 		this.emp = emp;
 	}
+
+	public static Object init(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

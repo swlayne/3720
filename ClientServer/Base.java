@@ -45,5 +45,10 @@ public class Base {
 	public void setpY(int pY) {
 		this.pY = pY;
 	}
+
+	public static Object init(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
