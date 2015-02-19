@@ -1,5 +1,3 @@
-package CLIENT;
-
 import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -23,7 +21,7 @@ public class ShipSpecTable {
 			specs[2][0] = "CLASS";
 				specs[2][1] = shipspecs.getShipClass();
 			specs[3][0] = "EMPIRE";
-				specs[3][1] = shipspecs.getEmp();
+				specs[3][1] = shipspecs.getEmp().getName();
 			specs[4][0] = "ENERGY LEVEL";
 				specs[4][1] = Integer.toString(ship.getCurrEnergy()) + "/" + Integer.toString(shipspecs.getMaxEnergy());
 			specs[5][0] = "SHIELD LEVEL";
