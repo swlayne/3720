@@ -45,9 +45,9 @@ public class ProjectServer extends NanoHTTPD {
     return new Response(jsonResponse);
   }
 
-
-private Object processRestoreGameRequest(RestoreGameRequest request) {
-	// TODO Auto-generated method stub
+//Public only for Junit testing
+public Object processRestoreGameRequest(RestoreGameRequest request) {
+	ProjectDatabase.instance().restoreGameRequest(request.game);
 	return null;
 }
 
