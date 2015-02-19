@@ -16,7 +16,7 @@ public class ProjectServer extends NanoHTTPD {
     String body = getBody(session);
     Object result;
     System.out.println("Incoming request: path = " + path + "; body: " + body);
-
+    /*
     if (path.equals("/ListProjectRequest")) {
       ListProjectRequest request = new Gson().fromJson(body, ListProjectRequest.class);
       result = processListProjectRequest(request);
@@ -29,8 +29,14 @@ public class ProjectServer extends NanoHTTPD {
     } else if (path.equals("/DeleteIssueRequest")) {
         DeleteIssueRequest request = new Gson().fromJson(body, DeleteIssueRequest.class);
         result = processDeleteIssueRequest(request);
+    } else */ if (path.equals("/TurnRequest")) {
+        TurnRequest request = new Gson().fromJson(body, TurnRequest.class);
+        result = processTurnRequest(request);
+    } else if (path.equals("/RestoreGameRequest")) {
+        RestoreGameRequest request = new Gson().fromJson(body, RestoreGameRequest.class);
+        result = processRestoreGameRequest(request);
     } else {
-      result = new ProjectResponse("Unimplemented request " + path);
+        result = new ProjectResponse("Unimplemented request " + path);
     }
     
     String jsonResponse = new Gson().toJson(result);
@@ -38,7 +44,19 @@ public class ProjectServer extends NanoHTTPD {
     
     return new Response(jsonResponse);
   }
-  
+
+
+private Object processRestoreGameRequest(RestoreGameRequest request) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+private Object processTurnRequest(TurnRequest request) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+/*
   private Object processEditIssueRequest(EditIssueRequest request) {
 	ProjectDatabase.instance().editIssueRequest(request.m_projectNumber, request.m_issue);
 	return null;
@@ -61,7 +79,7 @@ public class ProjectServer extends NanoHTTPD {
     
     return response;
   }
-
+*/
   protected String getBody(IHTTPSession session) {
     int len = Integer.parseInt(session.getHeaders().get("content-length"));
     InputStream inputStream = session.getInputStream();
